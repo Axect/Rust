@@ -1,4 +1,3 @@
-#[derive(Debug)]
 enum Peano {
     Zero,
     Succ(Box<Peano>)
@@ -19,4 +18,5 @@ impl PartialEq for Peano {
 
 fn main() {
     println!("{}", Zero==Zero);
+    println!("{}", (|x:i64| x+1)(2)); //Lambda
 }
