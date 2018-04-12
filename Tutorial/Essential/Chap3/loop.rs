@@ -33,5 +33,5 @@ fn main() {
     }
 
     let mut x = 10;
-    for _ in 1 .. x {x -= 1; print!("."); }
+    for _ in 1 .. x { x -= 1; print!("."); }
 }
