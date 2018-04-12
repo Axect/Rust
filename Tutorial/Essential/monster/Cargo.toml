@@ -1,0 +1,6 @@
+[package]
+name = "monster"
+version = "0.1.0"
+authors = ["Axect <edeftg@gmail.com>"]
+
+[dependencies]
