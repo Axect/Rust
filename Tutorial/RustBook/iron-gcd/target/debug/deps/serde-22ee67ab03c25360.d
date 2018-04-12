@@ -1,0 +1,15 @@
+/home/kavis/Documents/Programming/Rust/Tutorial/RustBook/iron-gcd/target/debug/deps/libserde-22ee67ab03c25360.rlib: /home/kavis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde-0.8.23/src/lib.rs /home/kavis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde-0.8.23/src/macros.rs /home/kavis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde-0.8.23/src/bytes.rs /home/kavis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde-0.8.23/src/de/mod.rs /home/kavis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde-0.8.23/src/de/impls.rs /home/kavis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde-0.8.23/src/de/value.rs /home/kavis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde-0.8.23/src/de/from_primitive.rs /home/kavis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde-0.8.23/src/iter.rs /home/kavis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde-0.8.23/src/ser/mod.rs /home/kavis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde-0.8.23/src/ser/impls.rs /home/kavis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde-0.8.23/src/utils.rs
+
+/home/kavis/Documents/Programming/Rust/Tutorial/RustBook/iron-gcd/target/debug/deps/serde-22ee67ab03c25360.d: /home/kavis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde-0.8.23/src/lib.rs /home/kavis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde-0.8.23/src/macros.rs /home/kavis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde-0.8.23/src/bytes.rs /home/kavis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde-0.8.23/src/de/mod.rs /home/kavis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde-0.8.23/src/de/impls.rs /home/kavis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde-0.8.23/src/de/value.rs /home/kavis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde-0.8.23/src/de/from_primitive.rs /home/kavis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde-0.8.23/src/iter.rs /home/kavis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde-0.8.23/src/ser/mod.rs /home/kavis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde-0.8.23/src/ser/impls.rs /home/kavis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde-0.8.23/src/utils.rs
+
+/home/kavis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde-0.8.23/src/lib.rs:
+/home/kavis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde-0.8.23/src/macros.rs:
+/home/kavis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde-0.8.23/src/bytes.rs:
+/home/kavis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde-0.8.23/src/de/mod.rs:
+/home/kavis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde-0.8.23/src/de/impls.rs:
+/home/kavis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde-0.8.23/src/de/value.rs:
+/home/kavis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde-0.8.23/src/de/from_primitive.rs:
+/home/kavis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde-0.8.23/src/iter.rs:
+/home/kavis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde-0.8.23/src/ser/mod.rs:
+/home/kavis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde-0.8.23/src/ser/impls.rs:
+/home/kavis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde-0.8.23/src/utils.rs:
