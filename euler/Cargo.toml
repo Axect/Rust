@@ -1,5 +1,5 @@
 [package]
-name = "Euler"
+name = "euler"
 version = "0.1.0"
 authors = ["Axect <edeftg@gmail.com>"]
 edition = "2018"
