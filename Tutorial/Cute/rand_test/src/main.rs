@@ -15,9 +15,10 @@ fn main() {
 
         let mut guess = String::new(); // To Input
         io::stdin().read_line(&mut guess)
-            .expect("Failed to read line");
+            .expect("Failed to read line"); // Error message
         println!("You Guessed: {}", guess);
 
+        // Use option
         let guess: u32 = match guess.trim().parse() {
             Ok(num) => num,
             Err(_) => continue,
