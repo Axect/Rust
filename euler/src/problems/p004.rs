@@ -1,27 +1,44 @@
 pub fn ans() -> u64 {
-    Palindrome { num: 10000 }
+    Palindrome { digit: Digit::Three(100, 100) }
         .take_while(|&x| x < 1_000_000)
-        .filter(|&x| is_product(Digit::Three, x))
+        .filter(|&x| is_palindrome(x))
         .max().unwrap()
 }
 
 pub enum Digit {
-    Two,
-    Three,
+    Two(u64, u64),
+    Three(u64, u64),
 }
 
 pub struct Palindrome {
-    num: u64,
+    digit: Digit,
 }
 
 impl Iterator for Palindrome {
     type Item = u64;
     fn next(&mut self) -> Option<Self::Item> {
-        self.num += 1;
-        while !is_palindrome(self.num) {
-            self.num += 1;
+        let mut s: u64 = 0;
+        match self.digit {
+            Digit::Two(x, y) => {
+                if y == 99 {
+                    s = (x + 1).pow(2);
+                    self.digit = Digit::Two(x + 1, x + 1);
+                } else {
+                    s = x * (y+1);
+                    self.digit = Digit::Two(x, y + 1)
+                }
+            },
+            Digit::Three(x, y) => {
+                if y == 999 {
+                    s = (x + 1).pow(2);
+                    self.digit = Digit::Three(x + 1, x + 1);
+                } else {
+                    s = x * (y+1);
+                    self.digit = Digit::Three(x, y + 1)
+                }
+            },
         }
-        Some(self.num)
+        Some(s)
     }
 }
 
@@ -33,19 +50,4 @@ pub fn is_palindrome(n: u64) -> bool {
         }
     }
     return true;
-}
-
-pub fn is_product(d: Digit, n: u64) -> bool {
-    match d {
-        Digit::Two => {
-            (10 .. 100)
-                .filter(|x| n % x == 0)
-                .any(|x| n / x >= 10 && n / x < 100)
-        },
-        Digit::Three => {
-            (100 .. 1000)
-                .filter(|x| n % x == 0)
-                .any(|x| n / x >= 100 && n / x < 1000)
-        },
-    }
 }
