@@ -9,10 +9,11 @@ fn main() {
 
     let secret_number = rand::thread_rng().gen_range(1, 101);
     // println!("The secret number is: {}", secret_number);
+    let mut n: u32 = 0;
     loop {
         println!("Please input your guess.");
 
-        let mut guess = String::new();
+        let mut guess = String::new(); // To Input
         io::stdin().read_line(&mut guess)
             .expect("Failed to read line");
         println!("You Guessed: {}", guess);
@@ -26,9 +27,10 @@ fn main() {
             Ordering::Less => println!("Too small!"),
             Ordering::Greater => println!("Too big!"),
             Ordering::Equal => {
-                println!("You win!");
+                println!("You win for {} times", n);
                 break;
             }
         }
+        n += 1;
     }
 }
