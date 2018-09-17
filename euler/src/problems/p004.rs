@@ -5,7 +5,6 @@ pub fn ans() -> u64 {
         .max().unwrap()
 }
 
-#[derive(Debug)]
 pub enum Digit {
     Two,
     Three,
@@ -13,7 +12,12 @@ pub enum Digit {
 
 pub fn is_palindrome(n: u64) -> bool {
     let s: String = n.to_string();
-    s == s.chars().rev().collect::<String>()
+    for (i1, i2) in s.chars().zip(s.chars().rev()) {
+        if i1 != i2 {
+            return false;
+        }
+    }
+    return true;
 }
 
 pub fn is_product(d: Digit, n: u64) -> bool {
