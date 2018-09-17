@@ -1,6 +1,6 @@
 pub fn ans() -> u64 {
-    (1000 .. 1_000_000)
-        .filter(|&x| is_palindrome(x))
+    Palindrome { num: 10000 }
+        .take_while(|&x| x < 1_000_000)
         .filter(|&x| is_product(Digit::Three, x))
         .max().unwrap()
 }
@@ -8,6 +8,21 @@ pub fn ans() -> u64 {
 pub enum Digit {
     Two,
     Three,
+}
+
+pub struct Palindrome {
+    num: u64,
+}
+
+impl Iterator for Palindrome {
+    type Item = u64;
+    fn next(&mut self) -> Option<Self::Item> {
+        self.num += 1;
+        while !is_palindrome(self.num) {
+            self.num += 1;
+        }
+        Some(self.num)
+    }
 }
 
 pub fn is_palindrome(n: u64) -> bool {
