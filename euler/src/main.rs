@@ -6,4 +6,5 @@ fn main() {
     println!("{}", problems::p003_ans());
     println!("{}", problems::p004_ans());
     println!("{}", problems::p005_ans());
+    println!("{}", problems::p006_ans());
 }

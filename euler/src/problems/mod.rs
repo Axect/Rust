@@ -3,6 +3,7 @@ pub mod p002;
 pub mod p003;
 pub mod p004;
 pub mod p005;
+pub mod p006;
 
 pub fn p001_ans() -> u64 {
     p001::ans()
@@ -22,4 +23,8 @@ pub fn p004_ans() -> u64 {
 
 pub fn p005_ans() -> u64 {
     p005::ans()
+}
+
+pub fn p006_ans() -> u64 {
+    p006::ans()
 }
