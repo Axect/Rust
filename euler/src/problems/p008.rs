@@ -5,7 +5,7 @@ pub fn ans() -> u64 {
     let mut f = File::open("data/p008.txt").expect("File not found");
     let mut data = String::new();
     f.read_to_string(&mut data).expect("Reading error");
-    data.retain(|s| s != '\n');
+    data.retain(|s| s != '\n'); // remove new line
     let results = data
         .chars()
         .map(|x| x.to_digit(10u32).unwrap() as u64)
