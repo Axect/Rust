@@ -9,4 +9,5 @@ fn main() {
     println!("{}", problems::p006_ans());
     println!("{}", problems::p007_ans());
     println!("{}", problems::p008_ans());
+    println!("{}", problems::p009_ans());
 }

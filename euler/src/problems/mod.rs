@@ -6,6 +6,7 @@ pub mod p005;
 pub mod p006;
 pub mod p007;
 pub mod p008;
+pub mod p009;
 pub mod tools;
 
 // =============================================================================
@@ -41,4 +42,8 @@ pub fn p007_ans() -> u64 {
 
 pub fn p008_ans() -> u64 {
     p008::ans()
+}
+
+pub fn p009_ans() -> u64 {
+    p009::ans()
 }
