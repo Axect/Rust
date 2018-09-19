@@ -11,11 +11,11 @@ pub struct Matrix {
     data: Vec<f64>,
 }
 
-trait Setter<T: convert::Into<f64>> {
+trait Array2D<T: convert::Into<f64>> {
     fn new(x:u64, y:u64, v: Vec<T>) -> Matrix;
 }
 
-impl<T> Setter<T> for Matrix where T: convert::Into<f64> {
+impl<T> Array2D<T> for Matrix where T: convert::Into<f64> {
     fn new(x: u64, y: u64, v: Vec<T>) -> Matrix {
         Matrix {
             i: x,
