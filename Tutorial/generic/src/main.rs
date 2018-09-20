@@ -6,7 +6,7 @@ fn main() {
     let p = Matrix::new(vec![1,2,3,4,5,6], 2, 3, Row);
     println!("{}", p);
     println!("{}", p.change_shape()); // Invariant
-    let q = Matrix::new((1..101).map(|x| x as f64).collect::<Vec<f64>>(), 10, 10, Col);
+    let q = Matrix::new((1..101).collect::<Vec<u32>>(), 10, 10, Col);
     println!("{}", q);
     println!("{}", q.change_shape());
 }
