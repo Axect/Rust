@@ -8,7 +8,8 @@ fn main() {
     println!("{}", p.change_shape()); // Invariant
     let q = Matrix::new((1..101).collect::<Vec<u32>>(), 10, 10, Col);
     println!("{}", q);
-    println!("{}", q.change_shape());
+    let r = Matrix::new((1..101).collect::<Vec<u32>>(), 10, 10, Row);
+    println!("{}", r.change_shape());
 }
 
 #[derive(Debug)]
