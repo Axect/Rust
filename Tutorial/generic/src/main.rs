@@ -3,9 +3,11 @@ use std::fmt;
 pub use self::Shape::{Row, Col};
 
 fn main() {
-    let p = Matrix::new(vec![1,2,3,4], 2, 2, Row);
+    let p = Matrix::new(vec![1,2,3,4,5,6], 2, 3, Row);
     println!("{}", p);
+    println!("{}", p.spread());
     println!("{}", p.change_shape());
+    println!("{}", p.change_shape().spread());
 }
 
 #[derive(Debug)]
@@ -22,8 +24,25 @@ pub struct Matrix {
     shape: Shape,
 }
 
-trait Array2D<T: convert::Into<f64>> {
+trait Generic<T: convert::Into<f64>> {
     fn new(v: Vec<T>, x:usize, y:usize, shape: Shape) -> Matrix;
+}
+
+impl<T> Generic<T> for Matrix where T: convert::Into<f64> {
+    fn new(v: Vec<T>, x: usize, y: usize, shape: Shape) -> Matrix {
+        Matrix {
+            data: v.into_iter().map(|x| x.into()).collect(),
+            row: x,
+            col: y,
+            shape: shape,
+        }
+    }
+}
+
+impl fmt::Display for Matrix {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "Matrix{:?}", self.data)
+    }
 }
 
 #[allow(dead_code)]
@@ -31,6 +50,7 @@ impl Matrix {
     fn change_shape(&self) -> Matrix {
         let r = self.row;
         let c = self.col;
+        assert_eq!(r*c, self.data.len());
         let l = r * c - 1;
         let mut data: Vec<f64> = self.data.clone();
         let ref_data: Vec<f64> = self.data.clone();
@@ -66,49 +86,43 @@ impl Matrix {
     }
 
     fn spread(&self) -> String {
-        //assert_eq!(self.row * self.col, self.data.len());
-        //let rows = self.row;
-        //let cols = self.col;
-        //let data = self.data.clone();
-        //
-        //let mut result = String::new();
+        assert_eq!(self.row * self.col, self.data.len());
+        let _rows = self.row;
+        let cols = self.col;
+        
+        let mut result = String::new();
 
-        //match self.shape {
-        //    Row => {
-        //        let temp: Vec<String> = data.into_iter().map(|x| x.to_string()).collect();
-        //        let ts: Vec<String> = temp.into_iter().take(rows).collect();
-        //        let mut ss: Vec<String> = temp.into_iter().skip(rows).collect();
-        //        result += &ts.join(",");
-        //        while ss.len() >= rows {
-        //            result += "\n";
-        //            let ts: Vec<String> = ss.into_iter().take(rows).collect();
-        //            result += &ts.join(",");
-        //            ss = ss.into_iter().skip(rows).collect();
-        //        }
-        //    },
-        //    Col => {
-        //        let temp: Vec<String> = data.into_iter().map(|x| x.to_string()).collect();
-        //        let ts: 
-        //    }
-        //}
-        //return result;
-        unimplemented!();
-    }
-}
+        match self.shape {
+            Row => {
+                let data = self.data.clone();
+                let temp: Vec<String> = data.into_iter().map(|x| x.to_string()).collect();
+                let ts: Vec<String> = temp.clone().into_iter().take(cols).collect();
+                let mut ss: Vec<String> = temp.into_iter().skip(cols).collect();
+                result += &ts.join(",");
+                while ss.len() >= cols {
+                    result += "\n";
+                    let ts: Vec<String> = ss.clone().into_iter().take(cols).collect();
+                    result += &ts.join(",");
+                    ss = ss.into_iter().skip(cols).collect();
+                }
+            },
+            Col => {
+                let mat = self.change_shape();
+                let data = mat.data.clone();
+                let temp: Vec<String> = data.into_iter().map(|x| x.to_string()).collect();
+                let ts: Vec<String> = temp.clone().into_iter().take(cols).collect();
+                let mut ss: Vec<String> = temp.into_iter().skip(cols).collect();
+                result += &ts.join(",");
+                while ss.len() >= cols {
+                    result += "\n";
+                    let ts: Vec<String> = ss.clone().into_iter().take(cols).collect();
+                    result += &ts.join(",");
+                    ss = ss.into_iter().skip(cols).collect();
+                }
 
-impl<T> Array2D<T> for Matrix where T: convert::Into<f64> {
-    fn new(v: Vec<T>, x: usize, y: usize, shape: Shape) -> Matrix {
-        Matrix {
-            data: v.into_iter().map(|x| x.into()).collect(),
-            row: x,
-            col: y,
-            shape: shape,
+            }
         }
+        return result;
     }
 }
 
-impl fmt::Display for Matrix {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "Matrix{:?}", self.data)
-    }
-}
