@@ -91,6 +91,15 @@ impl Matrix {
         let cols = self.col;
         
         let mut result = String::new();
+        result += &tab("");
+
+        // Make header
+        for i in 0 .. cols {
+            let s = format!("c[{}]", i);
+            result += &tab(&s);
+            result += &s;
+        }
+        result += "\n";
 
         match self.shape {
             Row => {
@@ -98,11 +107,26 @@ impl Matrix {
                 let temp: Vec<String> = data.into_iter().map(|x| x.to_string()).collect();
                 let ts: Vec<String> = temp.clone().into_iter().take(cols).collect();
                 let mut ss: Vec<String> = temp.into_iter().skip(cols).collect();
-                result += &ts.join(",");
+                let mut n: usize = 0;
+                let s = format!("r[{}]", n);
+                result += &s;
+                result += &tab(&s);
+                for txt in ts.into_iter() {
+                    result += &tab(&txt);
+                    result += &txt;
+                }
                 while ss.len() >= cols {
                     result += "\n";
                     let ts: Vec<String> = ss.clone().into_iter().take(cols).collect();
-                    result += &ts.join(",");
+                    n += 1;
+                    let s = format!("r[{}]", n);
+                    result += &s;
+                    result += &tab(&s);
+                    let tl = ts.len();
+                    for i in 0 .. tl {
+                        result += &tab(&ts[i]);
+                        result += &ts[i];
+                    }
                     ss = ss.into_iter().skip(cols).collect();
                 }
             },
@@ -112,17 +136,39 @@ impl Matrix {
                 let temp: Vec<String> = data.into_iter().map(|x| x.to_string()).collect();
                 let ts: Vec<String> = temp.clone().into_iter().take(cols).collect();
                 let mut ss: Vec<String> = temp.into_iter().skip(cols).collect();
-                result += &ts.join(",");
+                let mut n: usize = 0;
+                let s = format!("r[{}]", n);
+                result += &s;
+                result += &tab(&s);
+                for txt in ts.into_iter() {
+                    result += &tab(&txt);
+                    result += &txt;
+                }
                 while ss.len() >= cols {
                     result += "\n";
                     let ts: Vec<String> = ss.clone().into_iter().take(cols).collect();
-                    result += &ts.join(",");
+                    n += 1;
+                    let s = format!("r[{}]", n);
+                    result += &s;
+                    result += &tab(&s);
+                    let tl = ts.len();
+                    for i in 0 .. tl {
+                        result += &tab(&ts[i]);
+                        result += &ts[i];
+                    }
                     ss = ss.into_iter().skip(cols).collect();
                 }
-
             }
         }
         return result;
     }
 }
 
+pub fn tab(s: &str) -> String {
+    let l = s.len();
+    let mut m: String = String::new();
+    for _i in 0 .. (5 - l) {
+        m += " ";
+    }
+    return m;
+}
