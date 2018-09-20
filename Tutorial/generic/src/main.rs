@@ -5,9 +5,7 @@ pub use self::Shape::{Row, Col};
 fn main() {
     let p = Matrix::new(vec![1,2,3,4,5,6], 2, 3, Row);
     println!("{}", p);
-    println!("{}", p.spread());
     println!("{}", p.change_shape());
-    println!("{}", p.change_shape().spread());
 }
 
 #[derive(Debug)]
@@ -41,7 +39,7 @@ impl<T> Generic<T> for Matrix where T: convert::Into<f64> {
 
 impl fmt::Display for Matrix {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "Matrix{:?}", self.data)
+        write!(f, "{}", self.spread())
     }
 }
 
@@ -164,10 +162,15 @@ impl Matrix {
     }
 }
 
+#[allow(unused_comparisons)]
 pub fn tab(s: &str) -> String {
     let l = s.len();
     let mut m: String = String::new();
-    for _i in 0 .. (5 - l) {
+    if (5 - l) >= 0 {
+        for _i in 0 .. (5 - l) {
+            m += " ";
+        }
+    } else {
         m += " ";
     }
     return m;
