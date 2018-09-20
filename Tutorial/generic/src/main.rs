@@ -5,7 +5,9 @@ pub use self::Shape::{Row, Col};
 fn main() {
     let p = Matrix::new(vec![1,2,3,4,5,6], 2, 3, Row);
     println!("{}", p);
-    println!("{}", p.change_shape());
+    println!("{}", p.change_shape()); // Invariant
+    let q = Matrix::new(vec![1,2,3,4,5,6,7,8,9], 3, 3, Col);
+    println!("{}", q);
 }
 
 #[derive(Debug)]
