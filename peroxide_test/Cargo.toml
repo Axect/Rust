@@ -1,0 +1,8 @@
+[package]
+name = "peroxide_test"
+version = "0.1.0"
+authors = ["Tae Geun, Kim <edeftg@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+peroxide = "0.1.2"
