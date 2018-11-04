@@ -3,6 +3,9 @@ extern crate peroxide;
 use peroxide::*;
 
 fn main() {
-    let a = Matrix::new(vec![1,2,3,4], 2, 2, Row);
-    println!("{}", a);
+    let s = seq!(0;1;0.01);
+    let a = matrix(s.clone(), s.len(), 1, Col);
+    let b = a.fmap(|x| x.powf(2.));
+    let c = cbind!(a, b);
+    c.write("dat.csv");
 }

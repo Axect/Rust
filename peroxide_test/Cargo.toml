@@ -5,4 +5,4 @@ authors = ["Tae Geun, Kim <edeftg@gmail.com>"]
 edition = "2018"
 
 [dependencies]
-peroxide = "0.1.2"
+peroxide = "0.5"
