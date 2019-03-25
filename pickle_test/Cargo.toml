@@ -1,0 +1,10 @@
+[package]
+name = "pickle_test"
+version = "0.1.0"
+authors = ["axect <edeftg@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+serde = "*"
+serde-pickle = "*"
+peroxide = "0.8"
