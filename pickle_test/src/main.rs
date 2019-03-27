@@ -13,6 +13,5 @@ fn main() {
 
     let mut writer: Box<Write> = Box::new(File::create("hello").unwrap());
 
-    let serialized = pickle::to_writer(&mut writer, &a.row(0), true).unwrap();
-
+    pickle::to_writer(&mut writer, &vec![a.row(0), a.row(1)], true).expect("pickle error");
 }
