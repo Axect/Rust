@@ -14,4 +14,6 @@ fn main() {
     let mut writer: Box<Write> = Box::new(File::create("hello").unwrap());
 
     pickle::to_writer(&mut writer, &vec![a.row(0), a.row(1)], true).expect("pickle error");
+    pickle::to_writer(&mut writer, &vec![a.col(0), a.col(1)], true).expect("pickle error2");
+    pickle::to_writer(&mut writer, &1f64, true).expect("pickle error3");
 }
