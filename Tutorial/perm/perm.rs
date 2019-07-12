@@ -1,5 +1,5 @@
 fn main() {
-    println!("{:?}", perm(5,3));
+    println!("{:?}", perm(99,3));
 }
 
 fn perm(n: usize, k: usize) -> Vec<Vec<usize>> {
