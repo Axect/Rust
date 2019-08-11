@@ -31,9 +31,33 @@ fn main() {
 
     println!("d[1,1] = {}", d[(1,1)]);
 
-    let mut e = Data::empty();
-    e.from_vec(&vec![1f64, 2f64, 3f64]);
-    println!("e[0,2] = {}", e[(0,2)]);
+    let mut m = Matrix::new(vec![vec![1f64,2f64,3f64], vec![4f64,5f64,6f64]]);
+    m.init_pointer();
+    println!("m[1,1] = {}", m.pointer[(1,1)]);
+}
+
+struct Matrix {
+    origin: Vec<Vec<f64>>,
+    pointer: Data,
+}
+
+impl Matrix {
+    fn new(v: Vec<Vec<f64>>) -> Self {
+        Matrix {
+            origin: v,
+            pointer: Data::empty()
+        }
+    }
+
+    fn init_pointer(&mut self) {
+        let v = &self.origin;
+        self.pointer = Data::new(v[0][0]);
+        for i in 0 .. v.len() {
+            for j in 0 .. v[0].len() {
+                self.pointer[(i, j)] = v[i][j];
+            }
+        }
+    }
 }
 
 struct Data {
