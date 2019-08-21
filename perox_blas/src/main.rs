@@ -1,11 +1,12 @@
 extern crate peroxide;
-extern crate cblas;
+extern crate blas;
 use peroxide::*;
-use cblas::*;
+use blas::*;
 
 fn main() {
-    let a = zeros(1000, 1000);
-    Matrix::blas_mul(&a, &a).print();
+    let a = zeros(3, 2);
+    let b = zeros(2, 2);
+    Matrix::blas_mul(&a, &b).print();
 }
 
 trait PeroxBLAS {
@@ -31,7 +32,7 @@ impl PeroxBLAS for Matrix {
         let mut c = vec![0f64; m * n];
 
         unsafe {
-            dgemm(Layout::RowMajor, Transpose::None, Transpose::None, m_i32, n_i32, k_i32, 1f64, a, m_i32, b, k_i32, 0f64, &mut c, m_i32);
+            dgemm(b'N', b'N', m_i32, n_i32, k_i32, 1f64, a, m_i32, b, k_i32, 0f64, &mut c, m_i32);
         }
 
         matrix(c, m, n, Row)
