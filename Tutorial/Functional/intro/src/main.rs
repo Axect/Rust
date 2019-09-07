@@ -1,5 +1,3 @@
-#![feature(extern_prelude)]
-
 mod intro_generic;
 mod intro_function;
 mod intro_iterator;
