@@ -3,3 +3,5 @@
 *.lock
 */bin/*
 */**/bin/*
+*/**/.idea
+*/.idea
