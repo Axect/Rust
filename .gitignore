@@ -1,7 +1,5 @@
 */target/*
 */**/target/*
 *.lock
-*/bin/*
-*/**/bin/*
 */**/.idea
 */.idea
