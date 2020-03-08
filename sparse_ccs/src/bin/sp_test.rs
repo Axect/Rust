@@ -16,4 +16,14 @@ fn main() {
 
     let b = SPMatrix::from_dense(&a);
     println!("{:?}", b);
+
+    b.to_dense().print();
+
+    let c = c!(1, 2, 3, 4, 5);
+    
+    let result = &b * &c;
+    let compar = &a * &c;
+
+    result.print();
+    compar.print();
 }

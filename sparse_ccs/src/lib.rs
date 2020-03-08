@@ -52,6 +52,18 @@ impl SPMatrix {
         }
     }
 
+    pub fn to_dense(&self) -> Matrix {
+        let mut m = zeros(self.row, self.col);
+
+        for j in 0 .. self.col {
+            for i in self.col_ptr[j] .. self.col_ptr[j+1] {
+                let k = self.row_ics[i];
+                m[(k, j)] = self.data[i];
+            }
+        }
+        m
+    }
+
     pub fn col_ptr(&self) -> &Vec<usize> {
         &self.col_ptr
     }
@@ -62,6 +74,38 @@ impl SPMatrix {
 
     pub fn data(&self) -> &Vec<f64> {
         &self.data
+    }
+
+    pub fn t(&self) -> Self {
+        let row = self.row;
+        let col = self.col;
+        let nnz = self.nnz;
+        let col_ptr = self.col_ptr();
+        let row_ics = self.row_ics();
+        let data = self.data();
+        let mut count = vec![0usize; row];
+        let mut result = Self::new(col, row, nnz);
+
+        for i in 0 .. col {
+            for j in col_ptr[i] .. col_ptr[i+1] {
+                let k = row_ics[j];
+                count[k] += 1;
+            }
+        }
+        for j in 0 .. row {
+            result.col_ptr[j+1] = result.col_ptr[j] + count[j];
+            count[j] = 0;
+        }
+        for i in 0 .. col {
+            for j in col_ptr[i] .. col_ptr[i+1] {
+                let k = row_ics[j];
+                let index = result.col_ptr[k] + count[k];
+                result.row_ics[index] = i;
+                result.data[index] = data[j];
+                count[k] += 1;
+            }
+        }
+        result
     }
 }
 
@@ -76,6 +120,22 @@ impl Mul<Vec<f64>> for SPMatrix {
         for j in 0 .. self.col {
             for i in col_ptr[j] .. col_ptr[j+1] {
                 y[row_ics[i]] += data[i] * other[j];
+            }
+        }
+        y
+    }
+}
+
+impl<'a, 'b> Mul<&'b Vec<f64>> for &'a SPMatrix {
+    type Output = Vec<f64>;
+    fn mul(self, rhs: &'b Vec<f64>) -> Self::Output {
+        let mut y = vec![0f64; self.row];
+        let col_ptr = self.col_ptr();
+        let row_ics = self.row_ics();
+        let data = self.data();
+        for j in 0 .. self.col {
+            for i in col_ptr[j] .. col_ptr[j+1] {
+                y[row_ics[i]] += data[i] * rhs[j];
             }
         }
         y
