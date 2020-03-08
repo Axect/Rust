@@ -10,7 +10,8 @@ build = "build.rs"
 
 [build-dependencies]
 cpp_build = "0.5"
+cc = { version = "1", features = ["parallel"]}
 
 [dependencies]
 cpp = "0.5"
-
+peroxide = "*"
