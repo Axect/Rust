@@ -1,10 +1,10 @@
 [package]
-name = "nd_test"
+name = "py_num"
 version = "0.1.0"
-authors = ["axect <axect@outlook.kr>"]
+authors = ["Axect <axect@outlook.kr>"]
 edition = "2018"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-ndarray = "0.13"
+peroxide = "*"
