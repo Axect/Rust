@@ -1,24 +1,31 @@
-use std::io;
-use tui::Terminal;
-use tui::backend::TermionBackend;
-use termion::raw::IntoRawMode;
-use tui::widgets::{Widget, Block, Borders};
-use tui::layout::{Layout, Constraint, Direction};
+use std::{error::Error, io};
+use termion::{
+    raw::IntoRawMode,
+    input::TermRead,
+};
+use tui::{
+    backend::TermionBackend,
+    layout::{Layout, Constraint, Direction},
+    widgets::{Widget, Block, Borders, Paragraph, Text},
+    Terminal,
+};
 
 fn main() -> Result<(), io::Error> {
+    // Create Terminal
     let stdout = io::stdout().into_raw_mode()?;
     let backend = TermionBackend::new(stdout);
     let mut terminal = Terminal::new(backend)?;
 
-    // Block
+    // Building UI
     //terminal.draw(|mut f| {
     //    let size = f.size();
-    //    Block::default()
+    //    let block = Block::default()
     //        .title("Block")
-    //        .borders(Borders::ALL)
-    //        .render(&mut f, size);
+    //        .borders(Borders::ALL);
+    //    f.render_widget(block, size);
     //})
     
+    // Layout
     terminal.draw(|mut f| {
         let chunks = Layout::default()
             .direction(Direction::Vertical)
@@ -31,17 +38,13 @@ fn main() -> Result<(), io::Error> {
                 ].as_ref()
             )
             .split(f.size());
-        Block::default()
+        let block = Block::default()
             .title("Block")
-            .borders(Borders::ALL)
-            .render(&mut f, chunks[0]);
-        Block::default()
-            .title("Block 1")
-            .borders(Borders::ALL)
-            .render(&mut f, chunks[1]);
-        Block::default()
+            .borders(Borders::ALL);
+        f.render_widget(block, chunks[0]);
+        let block = Block::default()
             .title("Block 2")
-            .borders(Borders::ALL)
-            .render(&mut f, chunks[2]);
+            .borders(Borders::ALL);
+        f.render_widget(block, chunks[1]);
     })
 }
