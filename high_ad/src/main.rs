@@ -4,9 +4,6 @@ fn main() {
     let x3 = Dual::new(vec![1., 3., 6., 6.]);
     let x2 = Dual::new(vec![1., 2., 2.]);
 
-    println!("{:?}", C(2,0));
-    println!("{:?}", C(2,1));
-    println!("{:?}", C(2,2));
     println!("{:?}", x3.clone() * x2.clone());
     println!("{:?}", x3.powi(3));
 }

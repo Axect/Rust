@@ -1,5 +1,5 @@
 [package]
-name = "bench_dot"
+name = "taylor_mul"
 version = "0.1.0"
 authors = ["Axect <axect@outlook.kr>"]
 edition = "2018"
