@@ -1,199 +1,75 @@
-use std::ops::{Neg, Add, Sub, Mul};
+extern crate peroxide;
+use peroxide::fuga::*;
+//use std::env::args;
 
 fn main() {
-    let x3 = Dual::new(vec![1., 3., 6., 6.]);
-    let x2 = Dual::new(vec![1., 2., 2.]);
+    //let args: Vec<String> = args().collect();
+    //let num: usize = args[1].parse().unwrap();
+    //if num == 1 {
+    //    bench_1().print();
+    //} else if num == 2 {
+    //    bench_2().print();
+    //} else {
+    //    println!("err");
+    //}
+    // x^3
+    let x1 = vec![3f64, 1f64];
+    x1.print();
+    let x2 = mul(&x1, &x1);
+    x2.print();
+    let x3 = mul(&x2, &x1);
+    x3.print();
+    let x4 = mul(&x3, &x1);
+    x4.print();
+    let x5 = mul(&x3, &x2);
+    x5.print();
+    let x6 = mul(&x4, &x1);
+    x6.print();
 
-    println!("{:?}", x3.clone() * x2.clone());
-    println!("{:?}", x3.powi(3));
+    let y1 = div(&x1, &x2);
+    y1.print();
+    let y2 = div(&x1, &x3);
+    y2.print();
 }
 
-#[derive(Debug, Clone)]
-struct Dual {
-    data: Vec<f64>
-}
-
-impl Dual {
-    fn new(v: Vec<f64>) -> Self {
-        Dual {
-            data: v
-        }
-    }
-}
-
-impl Neg for Dual {
-    type Output = Self;
-
-    fn neg(self) -> Self::Output {
-        Dual::new(self.data.into_iter().map(|x| -x).collect())
-    }
-}
-
-impl Add for Dual {
-    type Output = Self;
-
-    fn add(self, rhs: Self) -> Self::Output {
-        let l1 = self.data.len();
-        let l2 = rhs.data.len();
-        if l1 >= l2 {
-            let mut v = vec![0f64; l1];
-            for i in 0 .. l2 {
-                v[i] = self.data[i] + rhs.data[i];
-            }
-            for i in l2 .. l1 {
-                v[i] = self.data[i];
-            }
-            Dual::new(v)
+fn mul(x: &[f64], y: &[f64]) -> Vec<f64> {
+    let mut z = vec![0f64; x.len() + y.len() - 1];
+    for t in 0..z.len() {
+        z[t] = if t < y.len() {
+            x.iter()
+                .take(t + 1)
+                .zip(y.iter().take(t + 1).rev())
+                .enumerate()
+                .fold(0f64, |s, (i, (x1, y1))| s + (C(t,i) as f64) * x1 * y1)
+        } else if t < x.len() {
+            x.iter()
+                .take(t + 1)
+                .rev()
+                .zip(y.iter())
+                .enumerate()
+                .fold(0f64, |s, (i, (x1, x2))| s + (C(t,i) as f64) * x1 * x2)
         } else {
-            let mut v = vec![0f64; l2];
-            for i in 0 .. l1 {
-                v[i] = self.data[i] + rhs.data[i];
-            }
-            for i in l1 .. l2 {
-                v[i] = rhs.data[i];
-            }
-            Dual::new(v)
+            x.iter()
+                .enumerate()
+                .skip(t - y.len() + 1)
+                .zip(y.iter().rev())
+                .fold(0f64, |s, ((i, x1), y1)| s + (C(t, i) as f64) * x1 * y1)
+        };
+    }
+    z
+}
+
+fn div(x: &[f64], y: &[f64]) -> Vec<f64> {
+    let mut z = vec![0f64; x.len()];
+    z[0] = x[0] / y[0];
+    let y0 = 1f64 / y[0];
+    for i in 1 .. z.len() {
+        let mut s = 0f64;
+        for (j, (y1, z1)) in y[1..i+1].iter().zip(z[0..i].iter().rev()).enumerate() {
+            s += (C(i, j+1) as f64) * y1 * z1;
+            s.print();
         }
+        z[i] = y0 * (x[i] - s);
     }
-}
-
-impl Sub for Dual {
-    type Output = Self;
-
-    fn sub(self, rhs: Self) -> Self::Output {
-        self + (-rhs)
-    }
-}
-
-#[allow(non_snake_case)]
-fn P(n: usize, r: usize) -> usize {
-    if r == 0 {
-        1
-    } else {
-        let mut p = 1usize;
-        for i in (n-r+1) .. n+1 {
-            p *= i;
-        }
-        p
-    }
-}
-
-fn factorial(n: usize) -> usize {
-    if n == 0 {
-        1
-    } else {
-        let mut s = 1usize;
-        for i in 2 .. n+1 {
-            s *= n;
-        }
-        s
-    }
-}
-
-#[allow(non_snake_case)]
-fn C(n: usize, r: usize) -> usize {
-    if r > n / 2 {
-        return C(n, n-r);
-    }
-
-    P(n, r) / factorial(r)
-}
-
-impl Mul for Dual {
-    type Output = Self;
-
-    fn mul(self, rhs: Self) -> Self::Output {
-        let l1 = self.data.len();
-        let l2 = rhs.data.len();
-
-        if l1 > l2 {
-            let mut v = rhs.data.clone();
-            for i in 0 .. l1 - l2 {
-                v.push(0f64);
-            }
-            return self.mul(Dual::new(v));
-        } else if l1 < l2 {
-            let mut v = self.data.clone();
-            for i in 0 .. l2 - l1 {
-                v.push(0f64);
-            }
-            return Dual::new(v).mul(rhs);
-        }
-
-        println!("{:?}", self);
-        println!("{:?}", rhs);
-
-        let mut v = vec![0f64; l1];
-
-        v[0] = self.data[0] * rhs.data[0];
-
-        for k in 1 .. v.len() {
-            v[k] = {
-                let mut s = 0f64;
-                for i in 0 .. k+1 {
-                    s += (C(k, i) as f64) * self.data[i] * rhs.data[k-i];
-                }
-                s
-            }
-        }
-
-        Dual::new(v)
-    }
-}
-
-trait PowOps {
-    fn powi(self, n: i32) -> Self;
-}
-
-impl PowOps for Dual {
-    fn powi(self, n: i32) -> Self {
-        Dual::new(powi(self.data, n))
-    }
-}
-
-fn mul(lhs: Vec<f64>, rhs: Vec<f64>) -> Vec<f64> {
-    let l1 = lhs.len();
-    let l2 = rhs.len();
-
-    if l1 > l2 {
-        let mut v = rhs.clone();
-        for i in 0 .. l1 - l2 {
-            v.push(0f64);
-        }
-        return mul(lhs, v);
-    } else if l1 < l2 {
-        let mut v = lhs.clone();
-        for i in 0 .. l2 - l1 {
-            v.push(0f64);
-        }
-        return mul(v, rhs);
-    }
-
-    let mut v = vec![0f64; l1];
-
-    v[0] = lhs[0] * rhs[0];
-
-    for k in 1 .. v.len() {
-        v[k] = {
-            let mut s = 0f64;
-            for i in 0 .. k+1 {
-                s += (C(k, i) as f64) * lhs[i] * rhs[k-i];
-            }
-            s
-        }
-    }
-    v
-}
-
-fn powi(v: Vec<f64>, n: i32) -> Vec<f64> {
-    if n <= 1 {
-        return v;
-    }
-
-    let x0 = v[0];
-    let x1: Vec<f64> = v.clone().into_iter().skip(1).collect();
-    let mut result = vec![x0];
-    let mut tail = mul(powi(v, n-1), x1).into_iter().map(|x| x * (n as f64));
-    result.extend(tail);
-    result
+    z
 }
