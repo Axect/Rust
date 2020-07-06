@@ -35,6 +35,13 @@ fn main() {
     z1.print();
     let z2 = ln(&x2);
     z2.print();
+
+    let p1 = powf(&x1, 2f64);
+    p1.print();
+    let p2 = powf(&x1, 0.5f64);
+    p2.print();
+    let p3 = powf(&x1, 1.5f64);
+    p3.print();
 }
 
 fn mul(x: &[f64], y: &[f64]) -> Vec<f64> {
@@ -88,6 +95,20 @@ fn ln(x: &[f64]) -> Vec<f64> {
             s += (C(i-1, j+1) as f64) * x1 * z1;
         }
         z[i] = x0 * (x[i] - s);
+    }
+    z
+}
+
+fn powf(x: &[f64], f: f64) -> Vec<f64> {
+    let ln_x = ln(x);
+    let mut z = vec![0f64; x.len()];
+    z[0] = x[0].powf(f);
+    for i in 1 .. z.len() {
+        let mut s = 0f64;
+        for (j, (z1, ln_x1)) in z[1..i].iter().zip(ln_x[1..i].iter().rev()).enumerate() {
+            s += (C(i-1, j+1) as f64) * z1 * ln_x1;
+        }
+        z[i] = f * (z[0] * ln_x[i] + s);
     }
     z
 }
