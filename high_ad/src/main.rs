@@ -12,8 +12,8 @@ fn main() {
     //} else {
     //    println!("err");
     //}
-    // x^3
-    let x1 = vec![3f64, 1f64];
+    // x = 3
+    let x1 = vec![3f64, 1f64, 0f64, 0f64];
     x1.print();
     let x2 = mul(&x1, &x1);
     x2.print();
@@ -30,10 +30,15 @@ fn main() {
     y1.print();
     let y2 = div(&x1, &x3);
     y2.print();
+
+    let z1 = ln(&x1);
+    z1.print();
+    let z2 = ln(&x2);
+    z2.print();
 }
 
 fn mul(x: &[f64], y: &[f64]) -> Vec<f64> {
-    let mut z = vec![0f64; x.len() + y.len() - 1];
+    let mut z = vec![0f64; x.len()];
     for t in 0..z.len() {
         z[t] = if t < y.len() {
             x.iter()
@@ -67,9 +72,22 @@ fn div(x: &[f64], y: &[f64]) -> Vec<f64> {
         let mut s = 0f64;
         for (j, (y1, z1)) in y[1..i+1].iter().zip(z[0..i].iter().rev()).enumerate() {
             s += (C(i, j+1) as f64) * y1 * z1;
-            s.print();
         }
         z[i] = y0 * (x[i] - s);
+    }
+    z
+}
+
+fn ln(x: &[f64]) -> Vec<f64> {
+    let mut z = vec![0f64; x.len()];
+    z[0] = x[0].ln();
+    let x0 = 1f64 / x[0];
+    for i in 1 .. z.len() {
+        let mut s = 0f64;
+        for (j, (x1, z1)) in x[1..i].iter().zip(z[1..i].iter().rev()).enumerate() {
+            s += (C(i-1, j+1) as f64) * x1 * z1;
+        }
+        z[i] = x0 * (x[i] - s);
     }
     z
 }
