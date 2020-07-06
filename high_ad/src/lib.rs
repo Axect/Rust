@@ -70,3 +70,11 @@ pub fn powf(x: &[f64], f: f64) -> Vec<f64> {
     }
     z
 }
+
+pub fn powi(x: &[f64], n: usize) -> Vec<f64> {
+    let mut z = Vec::from(x);
+    for _i in 1 .. n {
+        z = mul(&z, x);
+    }
+    z
+}

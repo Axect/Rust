@@ -5,5 +5,5 @@ use high_ad::*;
 
 fn main() {
     let x = c!(1, 1, 0, 0, 0, 0, 0);
-    powf(&x, 30f64).print();
+    powf(&x, 100f64).print();
 }
