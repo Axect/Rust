@@ -91,3 +91,29 @@ pub fn exp(x: &[f64]) -> Vec<f64> {
     }
     z
 }
+
+pub fn sin_cos(x: &[f64]) -> (Vec<f64>, Vec<f64>) {
+    let mut u = vec![0f64; x.len()];
+    let mut v = vec![0f64; x.len()];
+    u[0] = x[0].sin();
+    v[0] = x[0].cos();
+
+    for i in 1..x.len() {
+        u[i] = v[0..i]
+            .iter()
+            .zip(x[1..i + 1].iter().rev())
+            .enumerate()
+            .fold(0f64, |x, (k, (v1, x1))| x + (C(i - 1, k) as f64) * x1 * v1);
+        v[i] = u[0..i]
+            .iter()
+            .zip(x[1..i + 1].iter().rev())
+            .enumerate()
+            .fold(0f64, |x, (k, (u1, x1))| x - (C(i - 1, k) as f64) * x1 * u1);
+    }
+    (u, v)
+}
+
+pub fn tan(x: &[f64]) -> Vec<f64> {
+    let (s, c) = sin_cos(x);
+    div(&s, &c)
+}
