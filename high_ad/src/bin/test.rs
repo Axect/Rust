@@ -1,6 +1,6 @@
 extern crate peroxide;
-use peroxide::fuga::*;
 use high_ad::*;
+use peroxide::fuga::*;
 //use std::env::args;
 
 fn main() {
