@@ -133,11 +133,29 @@ pub fn recip(x: &[f64]) -> Vec<f64> {
 }
 
 pub fn csc_sec(x: &[f64]) -> (Vec<f64>, Vec<f64>) {
-    let (s,c) = sin_cos(x);
+    let (s, c) = sin_cos(x);
     (recip(&s), recip(&c))
 }
 
 pub fn cot(x: &[f64]) -> Vec<f64> {
     let (s, c) = sin_cos(x);
     div(&c, &s)
+}
+
+pub fn log(x: &[f64], base: f64) -> Vec<f64> {
+    ln(x).fmap(|t| t / base.ln())
+}
+
+pub fn powd(a: f64, x: &[f64]) -> Vec<f64> {
+    let mut z = vec![0f64; x.len()];
+    z[0] = a.powf(x[0]);
+    for i in 1..z.len() {
+        z[i] = a.ln()
+            * z[0..i]
+                .iter()
+                .zip(x[1..i + 1].iter().rev())
+                .enumerate()
+                .fold(0f64, |x, (k, (z1, x1))| x + (C(i - 1, k) as f64) * x1 * z1);
+    }
+    z
 }
