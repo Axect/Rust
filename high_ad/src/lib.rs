@@ -104,11 +104,11 @@ pub fn sin_cos(x: &[f64]) -> (Vec<f64>, Vec<f64>) {
             .zip(x[1..i + 1].iter().rev())
             .enumerate()
             .fold(0f64, |x, (k, (v1, x1))| x + (C(i - 1, k) as f64) * x1 * v1);
-        v[i] = u[0..i]
+        v[i] = -u[0..i]
             .iter()
             .zip(x[1..i + 1].iter().rev())
             .enumerate()
-            .fold(0f64, |x, (k, (u1, x1))| x - (C(i - 1, k) as f64) * x1 * u1);
+            .fold(0f64, |x, (k, (u1, x1))| x + (C(i - 1, k) as f64) * x1 * u1);
     }
     (u, v)
 }
@@ -116,4 +116,18 @@ pub fn sin_cos(x: &[f64]) -> (Vec<f64>, Vec<f64>) {
 pub fn tan(x: &[f64]) -> Vec<f64> {
     let (s, c) = sin_cos(x);
     div(&s, &c)
+}
+
+pub fn recip(x: &[f64]) -> Vec<f64> {
+    let mut z = vec![0f64; x.len()];
+    z[0] = 1f64 / x[0];
+    for i in 1..z.len() {
+        let s = z[0..i]
+            .iter()
+            .zip(x[1..i + 1].iter().rev())
+            .enumerate()
+            .fold(0f64, |x, (k, (z1, x1))| x + (C(i, k) as f64) * z1 * x1);
+        z[i] = -s * z[0];
+    }
+    z
 }
