@@ -131,3 +131,13 @@ pub fn recip(x: &[f64]) -> Vec<f64> {
     }
     z
 }
+
+pub fn csc_sec(x: &[f64]) -> (Vec<f64>, Vec<f64>) {
+    let (s,c) = sin_cos(x);
+    (recip(&s), recip(&c))
+}
+
+pub fn cot(x: &[f64]) -> Vec<f64> {
+    let (s, c) = sin_cos(x);
+    div(&c, &s)
+}
