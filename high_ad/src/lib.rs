@@ -159,3 +159,39 @@ pub fn powd(a: f64, x: &[f64]) -> Vec<f64> {
     }
     z
 }
+
+pub fn sinh_cosh(x: &[f64]) -> (Vec<f64>, Vec<f64>) {
+    let mut u = vec![0f64; x.len()];
+    let mut v = vec![0f64; x.len()];
+    u[0] = x[0].sinh();
+    v[0] = x[0].cosh();
+
+    for i in 1..x.len() {
+        u[i] = v[0..i]
+            .iter()
+            .zip(x[1..i + 1].iter().rev())
+            .enumerate()
+            .fold(0f64, |x, (k, (v1, x1))| x + (C(i - 1, k) as f64) * x1 * v1);
+        v[i] = u[0..i]
+            .iter()
+            .zip(x[1..i + 1].iter().rev())
+            .enumerate()
+            .fold(0f64, |x, (k, (u1, x1))| x + (C(i - 1, k) as f64) * x1 * u1);
+    }
+    (u, v)
+}
+
+pub fn tanh(x: &[f64]) -> Vec<f64> {
+    let (s, c) = sinh_cosh(x);
+    div(&s, &c)
+}
+
+pub fn coth(x: &[f64]) -> Vec<f64> {
+    let (s, c) = sinh_cosh(x);
+    div(&c, &s)
+}
+
+pub fn csch_sech(x: &[f64]) -> (Vec<f64>, Vec<f64>) {
+    let (s, c) = sinh_cosh(x);
+    (recip(&s), recip(&c))
+}
