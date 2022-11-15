@@ -11,6 +11,7 @@ use arrow2::{
         FileWriter,
         Encoding,
     },
+    io::parquet::read,
 };
 
 fn main() -> Result<()> {
@@ -32,7 +33,8 @@ fn main() -> Result<()> {
 
     // Create a chunk
     let data = vec![x.boxed(), y.boxed()];
-    let chunk = Chunk::new(data.clone());
+    let l = data.len();
+    let chunk = vec![Ok(Chunk::new(data))];
 
     let options = WriteOptions {
         write_statistics: true,
@@ -40,10 +42,10 @@ fn main() -> Result<()> {
         version: Version::V2
     };
 
-    let encodings = (0 .. data.len()).map(|_| vec![Encoding::Plain]).collect::<Vec<_>>();
+    let encodings = (0 .. l).map(|_| vec![Encoding::Plain]).collect::<Vec<_>>();
 
     let row_groups = RowGroupIterator::try_new(
-        vec![Ok(chunk)].into_iter(),
+        chunk.into_iter(),
         &schema,
         options,
         encodings,
@@ -58,6 +60,34 @@ fn main() -> Result<()> {
     }
 
     let _ = writer.end(None)?;
+
+    // =========================================================================
+    // Read the file
+    // =========================================================================
+    let mut reader = std::fs::File::open("test.parquet")?;
+    let metadata = read::read_metadata(&mut reader)?;
+    let schema = read::infer_schema(&metadata)?;
+
+    let fields = schema.fields.clone();
+
+    let row_groups = metadata.row_groups;
+    let chunks = read::FileReader::new(reader, row_groups, schema, None, None, None);
+
+    for may_chunk in chunks {
+        let chunk = may_chunk?;
+        println!("{:#?}", chunk);
+
+        let arrs = chunk.into_arrays();
+        println!("{:#?}", arrs);
+
+        for (field, arr) in fields.iter().zip(arrs) {
+            let name = &field.name;
+            let data_type = field.data_type();
+            let x = arr.as_any().downcast_ref::<PrimitiveArray<f64>>().unwrap();
+            let x = x.values_iter().cloned().collect::<Vec<_>>();
+            println!("{}: {:?} {:?}", name, data_type, x);
+        }
+    }
 
     Ok(())
 }
