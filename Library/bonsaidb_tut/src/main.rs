@@ -8,16 +8,16 @@ use peroxide::fuga::*;
 #[derive(Debug, Serialize, Deserialize, Collection)]
 #[collection(name = "matrices", views = [DBMatrixByID])]
 struct DBMatrix {
-    pub id: usize,
+    pub id: (usize, usize),
     pub matrix: Matrix,
 }
 
 #[derive(Debug, Clone, View, ViewSchema)]
-#[view(collection = DBMatrix, key = usize, value = u32, name = "by-id")]
+#[view(collection = DBMatrix, key = (usize, usize), value = u32, name = "by-id")]
 struct DBMatrixByID;
 
 impl DBMatrix {
-    pub fn from_id_and_matrix(id: usize, matrix: Matrix) -> Self {
+    pub fn from_id_and_matrix(id: (usize, usize), matrix: Matrix) -> Self {
         Self {
             id,
             matrix,
@@ -44,18 +44,20 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let db = Database::open::<DBMatrix>(StorageConfiguration::new("matrix.db"))?;
 
     for i in 0 .. 10 {
-        let matrix = rand(10, 10);
-        DBMatrix::from_id_and_matrix(i, matrix).push_into(&db)?;
+        for j in 0 .. 10 {
+            let matrix = rand(10, 10);
+            DBMatrix::from_id_and_matrix((i, j), matrix).push_into(&db)?;
+        }
     }
 
-    let matrix = rand(10, 10);
-    DBMatrix::from_id_and_matrix(2, matrix).push_into(&db)?;
+    let matrix = zeros(10, 10);
+    DBMatrix::from_id_and_matrix((2,2), matrix).push_into(&db)?;
 
-    let matrices = DBMatrixByID::entries(&db).with_key(&2).query()?;
+    let matrices = DBMatrixByID::entries(&db).with_key(&(2, 2)).query()?;
     println!("Number of matrices: {}", matrices.len());
 
-    for entry in &DBMatrixByID::entries(&db).with_key(&2).query_with_collection_docs()? {
-        println!("Id: {} & {}\nMatrix: \n{}", entry.document.header.id, entry.document.contents.id, entry.document.contents.to_matrix());
+    for entry in &DBMatrixByID::entries(&db).with_key(&(2,2)).query_with_collection_docs()? {
+        println!("Id: {:?} & {:?}\nMatrix: \n{}", entry.document.header.id, entry.document.contents.id, entry.document.contents.to_matrix());
     }
 
     Ok(())
