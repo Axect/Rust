@@ -5,36 +5,11 @@ use bonsaidb::local::Database;
 use serde::{Deserialize, Serialize};
 use peroxide::fuga::*;
 
-#[derive(Debug, Serialize, Deserialize)]
-enum DBShape {
-    Row,
-    Col
-}
-
-impl DBShape {
-    pub fn from_shape(shape: Shape) -> Self {
-        match shape {
-            Shape::Row => Self::Row,
-            Shape::Col => Self::Col
-        }
-    }
-
-    pub fn to_shape(&self) -> Shape {
-        match self {
-            Self::Row => Shape::Row,
-            Self::Col => Shape::Col
-        }
-    }
-}
-
 #[derive(Debug, Serialize, Deserialize, Collection)]
 #[collection(name = "matrices", views = [DBMatrixByID])]
 struct DBMatrix {
     pub id: usize,
-    pub data: Vec<f64>,
-    pub row: usize,
-    pub col: usize,
-    pub shape: DBShape
+    pub matrix: Matrix,
 }
 
 #[derive(Debug, Clone, View, ViewSchema)]
@@ -45,15 +20,12 @@ impl DBMatrix {
     pub fn from_id_and_matrix(id: usize, matrix: Matrix) -> Self {
         Self {
             id,
-            data: matrix.data,
-            row: matrix.row,
-            col: matrix.col,
-            shape: DBShape::from_shape(matrix.shape)
+            matrix,
         }
     }
 
     pub fn to_matrix(&self) -> Matrix {
-        matrix(self.data.clone(), self.row, self.col, self.shape.to_shape())
+        self.matrix.clone()
     }
 }
 

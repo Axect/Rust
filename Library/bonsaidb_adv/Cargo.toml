@@ -1,5 +1,5 @@
 [package]
-name = "bonsaidb_tut"
+name = "bonsaidb_adv"
 version = "0.1.0"
 edition = "2021"
 
@@ -7,5 +7,5 @@ edition = "2021"
 
 [dependencies]
 bonsaidb = { version = "0.5.0", features = ["local"] }
-peroxide = { version = "0.34.3", features = ["serde"] }
-serde = { version = "1.0.195", features = ["derive"] }
+peroxide = "0.34.3"
+serde = { version = "1.0.196", features = ["derive"] }
