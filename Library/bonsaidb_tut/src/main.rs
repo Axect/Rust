@@ -71,13 +71,13 @@ impl CollectionMapReduce for DBMatrixByID {
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let db = Database::open::<DBMatrix>(StorageConfiguration::new("matrix.db"))?;
 
-    //for i in 0 .. 10 {
-    //    let matrix = rand(10, 10);
-    //    DBMatrix::from_id_and_matrix(i, matrix).push_into(&db)?;
-    //}
+    for i in 0 .. 10 {
+        let matrix = rand(10, 10);
+        DBMatrix::from_id_and_matrix(i, matrix).push_into(&db)?;
+    }
 
-    //let matrix = rand(10, 10);
-    //DBMatrix::from_id_and_matrix(2, matrix).push_into(&db)?;
+    let matrix = rand(10, 10);
+    DBMatrix::from_id_and_matrix(2, matrix).push_into(&db)?;
 
     let matrices = DBMatrixByID::entries(&db).with_key(&2).query()?;
     println!("Number of matrices: {}", matrices.len());
