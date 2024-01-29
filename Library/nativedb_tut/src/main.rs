@@ -54,7 +54,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let r = db.r_transaction()?;
 
     for item in r.scan().secondary::<DBMatrix>(DBMatrixKey::m)?.range(0.0..0.02) {
-        println!("{:?}", item);
+        println!("id: {:?}, m: {:.4}", item.id, item.m);
+        item.matrix.print();
     }
 
     Ok(())
