@@ -55,19 +55,21 @@ fn update() -> Result<(), Box<dyn std::error::Error>> {
 
     let mut key_to_update = vec![];
 
-    for data in bucket.cursor() {
+    let data = bucket.cursor().find(|data| {
         if let Data::KeyValue(kv) = data {
-            let key = kv.key();
-            let value = kv.value();
-            let dbid: DBID = rmp_serde::from_slice(key)?;
-            if dbid.m == 0.1 {
-                let matrix: Matrix = rmp_serde::from_slice(value)?;
-                println!("id: {:?}, m: {:.4}", dbid.id, dbid.m);
-                matrix.print();
-
-                key_to_update.push(dbid);
-            }
+            let dbid: DBID = rmp_serde::from_slice(kv.key()).unwrap();
+            dbid.m == 0.1
+        } else {
+            false
         }
+    });
+
+    if let Some(Data::KeyValue(kv)) = data {
+        let dbid: DBID = rmp_serde::from_slice(kv.key()).unwrap();
+        let matrix: Matrix = rmp_serde::from_slice(kv.value()).unwrap();
+        println!("id: {:?}, m: {:.4}", dbid.id, dbid.m);
+        matrix.print();
+        key_to_update.push(dbid);
     }
 
     for key in key_to_update {
