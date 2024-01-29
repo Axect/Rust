@@ -33,12 +33,12 @@ fn write() -> Result<(), Box<dyn std::error::Error>> {
     let db = builder.create("matrix.db")?;
     let rw = db.rw_transaction().unwrap();
     let u = Uniform(0.0, 1.0);
-    let mut m_vec = u.sample(100);
-    m_vec[1] = 0.1;
-    for i in 0 .. 10 {
-        for j in 0 .. 10 {
-            let m = m_vec[i * 10 + j];
-            let matrix = rand(10, 10);
+    let mut m_vec = u.sample(10000);
+    m_vec[9301] = 0.1;
+    for i in 0 .. 100 {
+        for j in 0 .. 100 {
+            let m = m_vec[i * 100 + j];
+            let matrix = rand(20, 5);
             rw.insert(
                 DBMatrix::from_param_and_matrix((i as u32, j as u32), m, matrix)
             )?;
@@ -54,16 +54,28 @@ fn update() -> Result<(), Box<dyn std::error::Error>> {
     builder.define::<DBMatrix>()?;
 
     let db = builder.open("matrix.db")?;
-    let rw = db.rw_transaction().unwrap();
+    let r = db.r_transaction().unwrap();
     let m = 0.1;
-    for item in rw.scan().secondary::<DBMatrix>(DBMatrixKey::m)?.start_with(m) {
+    let mut key_to_update = vec![];
+    for item in r.scan().secondary::<DBMatrix>(DBMatrixKey::m)?.start_with(m) {
         println!("id: {:?}, m: {:.4}", item.id, item.m);
         item.matrix.print();
 
-        let new_item = DBMatrix::from_param_and_matrix(item.id, item.m, zeros(10, 10));
-        println!("new id: {:?}, m: {:.4}", new_item.id, new_item.m);
-        new_item.matrix.print();
-        rw.update(item, new_item)?;
+        key_to_update.push(item);
+    }
+
+    let rw = db.rw_transaction().unwrap();
+    for item in key_to_update {
+        let id = item.id;
+        let m = item.m;
+        let matrix = zeros(20, 5);
+
+        println!("id: {:?}, m: {:.4}", id, m);
+        matrix.print();
+
+        rw.update(
+            item, DBMatrix::from_param_and_matrix(id, m, matrix)
+        )?;
     }
     rw.commit()?;
 
@@ -76,7 +88,7 @@ fn read() -> Result<(), Box<dyn std::error::Error>> {
     let db = builder.open("matrix.db")?;
     let r = db.r_transaction()?;
 
-    let item: DBMatrix = r.get().primary((0u32, 1u32))?.unwrap();
+    let item: DBMatrix = r.scan().secondary::<DBMatrix>(DBMatrixKey::m)?.start_with(0.1).next().unwrap();
     println!("id: {:?}, m: {:.4}", item.id, item.m);
     item.matrix.print();
 
