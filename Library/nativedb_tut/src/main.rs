@@ -33,9 +33,9 @@ fn write() -> Result<(), Box<dyn std::error::Error>> {
     let db = builder.create("matrix.db")?;
     let rw = db.rw_transaction().unwrap();
     let u = Uniform(0.0, 1.0);
-    let mut m_vec = u.sample(10000);
+    let mut m_vec = u.sample(100000);
     m_vec[9301] = 0.1;
-    for i in 0 .. 100 {
+    for i in 0 .. 1000 {
         for j in 0 .. 100 {
             let m = m_vec[i * 100 + j];
             let matrix = rand(20, 5);

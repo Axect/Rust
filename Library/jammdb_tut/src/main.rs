@@ -29,12 +29,12 @@ fn write() -> Result<(), Box<dyn std::error::Error>> {
     let bucket = tx.create_bucket("data")?;
 
     let u = Uniform(0.0, 1.0);
-    let mut m_vec = u.sample(100);
-    m_vec[1] = 0.1;
-    for i in 0 .. 10 {
-        for j in 0 .. 10 {
-            let m = m_vec[i * 10 + j];
-            let matrix = rand(10, 10);
+    let mut m_vec = u.sample(100000);
+    m_vec[9301] = 0.1;
+    for i in 0 .. 1000 {
+        for j in 0 .. 100 {
+            let m = m_vec[i * 100 + j];
+            let matrix = rand(20, 5);
             let dbid = DBID::new((i, j), m);
 
             let dbid_ = rmp_serde::to_vec(&dbid)?;
@@ -71,7 +71,7 @@ fn update() -> Result<(), Box<dyn std::error::Error>> {
     }
 
     for key in key_to_update {
-        let matrix = zeros(10, 10);
+        let matrix = zeros(20, 5);
         let matrix_ = rmp_serde::to_vec(&matrix)?;
 
         println!("id: {:?}, m: {:.4}", key.id, key.m);
@@ -90,16 +90,18 @@ fn read() -> Result<(), Box<dyn std::error::Error>> {
     let tx = db.tx(true)?;
     let bucket = tx.get_bucket("data")?;
 
-    let mut cursor = bucket.cursor();
-    let dbid = DBID::new((0, 1), 0.1);
-    cursor.seek(rmp_serde::to_vec(&dbid)?);
+    let data = bucket.cursor().find(|data| {
+        if let Data::KeyValue(kv) = data {
+            let dbid: DBID = rmp_serde::from_slice(kv.key()).unwrap();
+            dbid.m == 0.1
+        } else {
+            false
+        }
+    });
 
-    if let Some(Data::KeyValue(kv)) = cursor.next() {
-        let key = kv.key();
-        let value = kv.value();
-        let dbid: DBID = rmp_serde::from_slice(key)?;
-        let matrix: Matrix = rmp_serde::from_slice(value)?;
-
+    if let Some(Data::KeyValue(kv)) = data {
+        let dbid: DBID = rmp_serde::from_slice(kv.key()).unwrap();
+        let matrix: Matrix = rmp_serde::from_slice(kv.value()).unwrap();
         println!("id: {:?}, m: {:.4}", dbid.id, dbid.m);
         matrix.print();
     }
