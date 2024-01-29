@@ -55,7 +55,6 @@ fn update() -> Result<(), Box<dyn std::error::Error>> {
 
     let db = builder.open("matrix.db")?;
     let rw = db.rw_transaction().unwrap();
-    let rw2 = db.rw_transaction().unwrap();
     let m = 0.1;
     for item in rw.scan().secondary::<DBMatrix>(DBMatrixKey::m)?.start_with(m) {
         println!("id: {:?}, m: {:.4}", item.id, item.m);
@@ -64,9 +63,8 @@ fn update() -> Result<(), Box<dyn std::error::Error>> {
         let new_item = DBMatrix::from_param_and_matrix(item.id, item.m, zeros(10, 10));
         println!("new id: {:?}, m: {:.4}", new_item.id, new_item.m);
         new_item.matrix.print();
-        rw2.update(item, new_item)?;
+        rw.update(item, new_item)?;
     }
-    rw2.commit()?;
     rw.commit()?;
 
     Ok(())
