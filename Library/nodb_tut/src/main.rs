@@ -30,14 +30,14 @@ fn write() -> Result<(), Box<dyn std::error::Error>> {
 
     let mut dbid_map = HashMap::new();
 
-    for i in 0 .. 1000 {
+    for i in 0 .. 10 {
         let run_dir = format!("matrix/run_{:04}", i);
-        for j in 0 .. 100 {
+        for j in 0 .. 1000 {
             let trial_dir = format!("{}/trial_{:04}", run_dir, j);
             std::fs::create_dir_all(&trial_dir)?;
 
-            let m = m_vec[i * 100 + j];
-            let matrix = rand(20, 5);
+            let m = m_vec[i * 1000 + j];
+            let matrix = rand(2000, 5);
             let dbid = DBID::new((i, j), m);
 
             let data = matrix.data.clone();
@@ -74,12 +74,12 @@ fn update() -> Result<(), Box<dyn std::error::Error>> {
             let matrix = matrix(data, row, col, Row);
 
             println!("id: {:?}, m: {:.4}", dbid.id, dbid.m);
-            matrix.print();
+            matrix.row(0).print();
 
-            let matrix = zeros(20, 5);
+            let matrix = zeros(2000, 4);
 
             println!("id: {:?}, m: {:.4}", dbid.id, dbid.m);
-            matrix.print();
+            matrix.row(0).print();
 
             let data = matrix.data.clone();
             let row = matrix.row;
@@ -112,7 +112,7 @@ fn read() -> Result<(), Box<dyn std::error::Error>> {
             let matrix = matrix(data, row, col, Row);
 
             println!("id: {:?}, m: {:.4}", dbid.id, dbid.m);
-            matrix.print();
+            matrix.row(0).print();
         }
     }
 
